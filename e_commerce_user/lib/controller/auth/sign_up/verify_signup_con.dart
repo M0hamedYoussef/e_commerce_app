@@ -1,0 +1,54 @@
+import 'package:e_commerce/core/class/request_status.dart';
+import 'package:e_commerce/core/functions/loading.dart';
+import 'package:e_commerce/core/functions/status_update.dart';
+import 'package:e_commerce/data/datasource/remote/auth/verifycode_data.dart';
+import 'package:e_commerce/routes.dart';
+import 'package:e_commerce/view/screens/success_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+class SignUpVerifyCon extends GetxController {
+  final GlobalKey<FormState> fst = GlobalKey<FormState>();
+  late RequsetStatus requsetStatus;
+  int code = 0;
+  String email = '';
+
+  VerifyCodeData verifyCodeData = VerifyCodeData(crud: Get.find());
+
+  getToSuccessScreen() {
+    Get.offAll(
+      const SuccessScreen(
+        toNamed: AppRoutes.login,
+        buttonText: 'login_title_0',
+      ),
+    );
+  }
+
+  Future<bool> getData() async {
+    late bool res;
+    requsetStatus = RequsetStatus.loading;
+    loading();
+    var response =
+        await verifyCodeData.getData(email: email, code: code.toString());
+    Get.back();
+    requsetStatus = statusUpdater(response: response);
+    if (requsetStatus == RequsetStatus.success) {
+      if (response['status'] == 'success') {
+        res = true;
+      } else if (response['status'] == 'failure') {
+        res = false;
+        Get.defaultDialog(title: 'alert'.tr, middleText: 'wrongcode'.tr);
+      }
+    }
+    return res;
+  }
+
+  verifyCode({required String passedEmail, required String passedCode}) async {
+    code = int.parse(passedCode);
+    email = passedEmail;
+    bool verified = await getData();
+    if (verified) {
+      getToSuccessScreen();
+    }
+  }
+}
