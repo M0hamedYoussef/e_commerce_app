@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class BottomAppBarScreenCon extends GetxController {
-  int currentPageIndex = 1;
+  int currentPageIndex = 0;
 
   List pages = [
     {
