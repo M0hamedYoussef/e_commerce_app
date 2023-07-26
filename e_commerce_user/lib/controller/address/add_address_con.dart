@@ -114,7 +114,7 @@ class AddressAddCon extends GetxController {
         addressModel: AddressModel.fromJson(
           {
             'address_name': nameCon.text,
-            'user_phonenumber': userPhoneCon.text,
+            'address_phonenumber': userPhoneCon.text,
             'address_city': cityCon.text,
             'address_street': streetCon.text,
             'address_lat': cameraPosition.target.latitude,
